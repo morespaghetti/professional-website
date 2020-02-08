@@ -1,0 +1,11 @@
+$font-stack: neue-haas-grotesk-display, sans-serif;
+$color-accent1: #4a4a4a;
+
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+body {
+  font-family: $font-stack;
+}
+
+.w-100 {
+  width: 100%;
+}

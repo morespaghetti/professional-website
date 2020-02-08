@@ -1,0 +1,31 @@
+<div class="container w-100 layout">
+  <div class="row">
+    <div class="col-md-12 date">
+      {{startDateString}} <ng-container *ngIf="endDateEnable===true"><div class="sep">to</div> {{endDateString}}</ng-container>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="title">{{data.title}}</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="subtitle">{{data.subtitle}}</div>
+      </div>
+    </div>
+
+    <div *ngIf="data.notes!=null" class="row">
+      <div class="col-md-12 notes">
+        <ul>
+          <li *ngFor="let n of data.notes">
+            {{n}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

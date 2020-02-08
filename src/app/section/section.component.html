@@ -1,0 +1,11 @@
+<div class="container w-100 layout">
+  <div class="row">
+    <div class="col-md-12 titleCol">
+        <div class="title">{{title}}</div>
+    </div>
+    <hr>
+    <div class="col-md-12">
+      <app-subsection *ngFor="let s of subsections" [data]="s" [endDateEnable]="endDateEnable"></app-subsection>
+    </div>
+  </div>
+</div>

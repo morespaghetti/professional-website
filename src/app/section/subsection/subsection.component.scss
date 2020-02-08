@@ -1,0 +1,38 @@
+@import '../../../styles.scss';
+
+.title {
+  font-size: 1.1em;
+  font-weight: normal;
+}
+
+.subtitle {
+  font-size: 0.9em;
+  font-style: italic;
+  color: $color-accent1;
+}
+
+.layout {
+  margin-bottom: 10px;
+}
+
+.content {
+  margin-left: 2.5%;
+}
+
+.date {
+  font-size: 0.8em;
+  padding-top: 5px;
+  padding-left: 10px;
+  font-weight: bold;
+  .sep {
+    display: inline-block;
+    font-size: 0.7em;
+  }
+}
+.notes {
+  font-size: 0.9em;
+  list-style-type: square;
+  ul {
+    margin: 0 0 0 0;
+  }
+}

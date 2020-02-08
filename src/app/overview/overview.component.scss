@@ -1,0 +1,43 @@
+.layout {
+  min-width: 100%;
+  padding: 5vh 0 5vh 10vw;
+  overflow-x: hidden;
+
+  .locationWrapper {
+
+    .location {
+      margin: 0.5em 0 0.5em 0;
+      display: inline-block;
+      font-size: 0.75em;
+      font-style: normal;
+    }
+  }
+  .name {
+    font-size: 2.5em;
+    margin: 0 0 0 0;
+    font-weight: normal;
+  }
+
+  .job {
+    font-size:1.5em;
+  }
+
+  .industry {
+    font-size: 1em;
+  }
+
+  .contentWrapper {
+    margin-top: 1em;
+  }
+
+  .icons {
+    font-size: 2em;
+    text-align: center;
+    color: #4875B4;
+  }
+
+  .footer {
+    font-size: 0.75em;
+    text-align: center;
+  }
+}

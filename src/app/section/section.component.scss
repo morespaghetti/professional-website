@@ -1,0 +1,14 @@
+@import '../../styles.scss';
+
+.layout {
+  margin-bottom: 1em;
+
+  .titleCol {
+    padding-left: 0;
+    .title {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: $color-accent1;
+    }
+  }
+}
