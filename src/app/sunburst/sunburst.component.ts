@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
 
 import {SkillsData} from './skillsData';
+//import { arch } from 'os';
 
 @Component({
   selector: 'app-sunburst',
@@ -15,7 +16,8 @@ export class SunburstComponent implements OnInit {
 
   data= SkillsData;
 
-  constructor() { }
+  constructor() {
+  }
 
   private chartDraw(): void {
 
@@ -73,20 +75,37 @@ export class SunburstComponent implements OnInit {
       return path.toString();
     };
 
+    // Determines if the text should be displayed or not
+    const textDisplay= d => {
+      const deltaAngle= Math.abs(thetaScale(d.x1) - thetaScale(d.x0));
+      if( deltaAngle>0.00001 ){
+        return null;
+      }else{
+        return 'none';
+      }
+    };
+
     const svg= d3.select(chartNativeElement).append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('viewBox', `${-width} ${-height/2} ${width} ${height}`)
-        .attr('preserveAspectRatio', 'xMaxYMid meet');
+        .attr('preserveAspectRatio', 'xMaxYMid meet')
+        .on('click', () => focusOn());
 
     const root= d3.hierarchy(this.data[0]);
     root.sum(d=>d.size);
+
+    var focusOnLastData= root;
 
     const slice = svg.selectAll('g.slice')
         .data(partition(root).descendants());
 
     const newSlice = slice.enter()
-        .append('g').attr('class', 'slice');
+        .append('g').attr('class', 'slice')
+        .on('click', d => {
+          d3.event.stopPropagation();
+          focusOn(d);
+        });
 
     newSlice.append('title')
         .text(d => d.data.name);
@@ -106,13 +125,57 @@ export class SunburstComponent implements OnInit {
 
     const text = newSlice.append('text')
         .attr('class', 'text-label')
-        .attr('display', null);
+        .attr('display', d => textDisplay(d));
 
     text.append('textPath')
         .attr('startOffset','50%')
         .attr('xlink:href', (_, i) => `#hiddenArc${i}` )
         .attr('class', 'text-path')
         .text(d => d.data.name);
+
+  function focusOn( d= {x0:0, x1: 1, y0: 0, y1: 1}){
+
+    if( d===focusOnLastData ){
+      // Same segment that was previously clicked, lets reset it
+      d= {x0:0, x1: 1, y0: 0, y1: 1};
+    }
+
+    const transition= svg.transition()
+        .duration(750)
+        .tween('scale', () => {
+          const xd= d3.interpolate(thetaScale.domain(), [d.x0, d.x1]);
+          const yd= d3.interpolate(radiusScale.domainGet(), [d.y0, 1]);
+
+          return t => {
+                        thetaScale.domain(xd(t));
+                        radiusScale.domainSet(yd(t));
+                        radiusScale.scaleSet();
+                        radiusScale.scale(t);
+                      };
+        });
+
+    transition.selectAll('path.main-arc')
+        .attrTween('d', d=> () => arc(d));
+
+    transition.selectAll('path.hidden-arc')
+        .attrTween('d', d=> () => radiusLine(d));
+
+    transition.selectAll('text')
+        .attrTween('display', d=> () => textDisplay(d));
+
+    moveStackToFront(d);
+
+    function moveStackToFront(elD) {
+      svg.selectAll('.slice').filter(d => d === elD)
+          .each(function(d) {
+              this.parentNode.appendChild(this);
+              if (d.parent) { moveStackToFront(d.parent); }
+          })
+    }
+
+    focusOnLastData= d;
+  }
+
   }
 
   ngOnInit() {
@@ -137,7 +200,16 @@ class ScaleMultiLinear {
     this.scaleSet();
   }
 
-  domainSet(domain: number[], domainT: number){
+  domainGet(){
+    return [this.domain[0], this.domain[2]];
+  }
+
+  domainSet(domain: number[], domainT?: number){
+
+    if(!domainT){
+      domainT= this.domainT;
+    }
+
     this.domain[0]= domain[0];
     this.domain[2]= domain[1];
     this.domainT= domainT;
