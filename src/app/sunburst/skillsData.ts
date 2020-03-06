@@ -148,7 +148,7 @@ export const SkillsData: Sunburst[] = [
             ]
           },
           {
-            name: 'Misison Design',
+            name: 'Mission Design',
             children: [
               {
                 name: 'Orbital Parameter Optimisation',
