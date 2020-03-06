@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
 
 import {SkillsData} from './skillsData';
-//import { arch } from 'os';
+import { Sunburst } from './sunburst.model';
 
 @Component({
   selector: 'app-sunburst',
@@ -14,12 +14,13 @@ export class SunburstComponent implements OnInit {
 
   chartNativeElement;
 
-  data= SkillsData;
+  data: Sunburst[]= SkillsData;
 
   constructor() {
   }
 
   ngOnInit() {
+    this.skillsDataSort(this.data);
     this.chartDraw();
   }
 
@@ -82,9 +83,9 @@ export class SunburstComponent implements OnInit {
     // Determines if the text should be displayed or not
     const textDisplay= d => {
       const deltaAngle= Math.abs(thetaScale(d.x1) - thetaScale(d.x0));
-      if( deltaAngle>0.00001 ){
+      if( deltaAngle>0.00001 ) {
         return null;
-      }else{
+      } else {
         return 'none';
       }
     };
@@ -137,9 +138,9 @@ export class SunburstComponent implements OnInit {
         .attr('class', 'text-path')
         .text(d => d.data.name);
 
-    function focusOn( d= {x0: 0, x1: 1, y0: 0, y1: 1}){
+    function focusOn( d= {x0: 0, x1: 1, y0: 0, y1: 1}) {
 
-      if( d===focusOnLastData ){
+      if( d===focusOnLastData ) {
         // Same segment that was previously clicked, lets reset it
         d= {x0: 0, x1: 1, y0: 0, y1: 1};
       }
@@ -171,15 +172,26 @@ export class SunburstComponent implements OnInit {
 
       function moveStackToFront(elD) {
         svg.selectAll('.slice').filter(d => d === elD)
-            .each(function(d){
+            .each(function(d) {
                 this.parentNode.appendChild(this);
-                if( d.parent ){ moveStackToFront(d.parent); }
+                if( d.parent ) { moveStackToFront(d.parent); }
             })
       }
 
       focusOnLastData= d;
     }
 
+  }
+
+  // Sorts each node in reverse alphabetical order
+  private skillsDataSort(root: Sunburst[]): void {
+    root.sort((a, b) => (a.name>b.name) ? -1 : 1);
+
+    root.forEach( (e) => {
+      if( e.children ){
+        this.skillsDataSort(e.children);
+      }
+    });
   }
 }
 
@@ -194,19 +206,19 @@ class ScaleMultiLinear {
   private scaleLower;
   private scaleUpper;
 
-  constructor(domain: number[], domainT: number, range: number[], rangeT: number){
+  constructor(domain: number[], domainT: number, range: number[], rangeT: number) {
     this.domainSet(domain, domainT);
     this.rangeSet(range, rangeT);
     this.scaleSet();
   }
 
-  domainGet(){
+  domainGet() {
     return [this.domain[0], this.domain[2]];
   }
 
-  domainSet(domain: number[], domainT?: number){
+  domainSet(domain: number[], domainT?: number) {
 
-    if(!domainT){
+    if(!domainT) {
       domainT= this.domainT;
     }
 
@@ -216,14 +228,14 @@ class ScaleMultiLinear {
     this.domain[1]= this.domain[0] + (this.domain[2]-this.domain[0])*this.domainT;
   }
 
-  rangeSet(range: number[], rangeT: number){
+  rangeSet(range: number[], rangeT: number) {
     this.range[0]= range[0];
     this.range[2]= range[1];
     this.rangeT= rangeT;
     this.range[1]= this.range[0] + (this.range[2]-this.range[0])*this.rangeT;
   }
 
-  scaleSet(){
+  scaleSet() {
     this.scaleLower= d3.scaleLinear()
                         .domain(this.domain.slice(0,2))
                         .range(this.range.slice(0,2));
@@ -233,10 +245,10 @@ class ScaleMultiLinear {
                         .range(this.range.slice(1,3));
   }
 
-  scale(x: number) : number{
-    if( x<this.domain[1] ){
+  scale(x: number) : number {
+    if( x<this.domain[1] ) {
       return this.scaleLower(x);
-    }else{
+    } else {
       return this.scaleUpper(x);
     }
   }
