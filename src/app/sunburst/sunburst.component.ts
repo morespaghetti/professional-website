@@ -19,6 +19,10 @@ export class SunburstComponent implements OnInit {
   constructor() {
   }
 
+  ngOnInit() {
+    this.chartDraw();
+  }
+
   private chartDraw(): void {
 
     const chartNativeElement= this.chartContainer.nativeElement;
@@ -113,7 +117,7 @@ export class SunburstComponent implements OnInit {
     newSlice.append('path')
         .attr('class', 'main-arc')
         .style('fill', d => color(d))
-        .style('opacity', d=>opacity(d))
+        .style('opacity', d => opacity(d))
         .attr('d', arc)
         .attr('transform', `translate(${0}, 0)`);
 
@@ -128,58 +132,54 @@ export class SunburstComponent implements OnInit {
         .attr('display', d => textDisplay(d));
 
     text.append('textPath')
-        .attr('startOffset','50%')
+        .attr('startOffset', '50%')
         .attr('xlink:href', (_, i) => `#hiddenArc${i}` )
         .attr('class', 'text-path')
         .text(d => d.data.name);
 
-  function focusOn( d= {x0:0, x1: 1, y0: 0, y1: 1}){
+    function focusOn( d= {x0: 0, x1: 1, y0: 0, y1: 1}){
 
-    if( d===focusOnLastData ){
-      // Same segment that was previously clicked, lets reset it
-      d= {x0:0, x1: 1, y0: 0, y1: 1};
+      if( d===focusOnLastData ){
+        // Same segment that was previously clicked, lets reset it
+        d= {x0: 0, x1: 1, y0: 0, y1: 1};
+      }
+
+      const transition= svg.transition()
+          .duration(750)
+          .tween('scale', () => {
+            const xd= d3.interpolate(thetaScale.domain(), [d.x0, d.x1]);
+            const yd= d3.interpolate(radiusScale.domainGet(), [d.y0, 1]);
+
+            return t=> {
+                          thetaScale.domain(xd(t));
+                          radiusScale.domainSet(yd(t));
+                          radiusScale.scaleSet();
+                          radiusScale.scale(t);
+                        };
+          });
+
+      transition.selectAll('path.main-arc')
+          .attrTween('d', d => () => arc(d));
+
+      transition.selectAll('path.hidden-arc')
+          .attrTween('d', d => () => radiusLine(d));
+
+      transition.selectAll('text')
+          .attrTween('display', d => () => textDisplay(d));
+
+      moveStackToFront(d);
+
+      function moveStackToFront(elD) {
+        svg.selectAll('.slice').filter(d => d === elD)
+            .each(function(d){
+                this.parentNode.appendChild(this);
+                if( d.parent ){ moveStackToFront(d.parent); }
+            })
+      }
+
+      focusOnLastData= d;
     }
 
-    const transition= svg.transition()
-        .duration(750)
-        .tween('scale', () => {
-          const xd= d3.interpolate(thetaScale.domain(), [d.x0, d.x1]);
-          const yd= d3.interpolate(radiusScale.domainGet(), [d.y0, 1]);
-
-          return t => {
-                        thetaScale.domain(xd(t));
-                        radiusScale.domainSet(yd(t));
-                        radiusScale.scaleSet();
-                        radiusScale.scale(t);
-                      };
-        });
-
-    transition.selectAll('path.main-arc')
-        .attrTween('d', d=> () => arc(d));
-
-    transition.selectAll('path.hidden-arc')
-        .attrTween('d', d=> () => radiusLine(d));
-
-    transition.selectAll('text')
-        .attrTween('display', d=> () => textDisplay(d));
-
-    moveStackToFront(d);
-
-    function moveStackToFront(elD) {
-      svg.selectAll('.slice').filter(d => d === elD)
-          .each(function(d) {
-              this.parentNode.appendChild(this);
-              if (d.parent) { moveStackToFront(d.parent); }
-          })
-    }
-
-    focusOnLastData= d;
-  }
-
-  }
-
-  ngOnInit() {
-    this.chartDraw();
   }
 }
 
