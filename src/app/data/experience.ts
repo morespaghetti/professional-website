@@ -3,7 +3,7 @@ import { Experience } from './experience.model';
 export const EXPERIENCE: Experience [] = [
   new Experience(new Date(2019, 6, 1),
                   null,
-                  'Management Consultant, Solution 49x',
+                  'Senior Technical Management Consultant, Solution 49x',
                   'KPMG',
                   'Solution 49x helps clients leverage artificial intelligence, cognitive technologies, and other emerging technologies.'),
   new Experience(new Date(2016, 1, 1),
