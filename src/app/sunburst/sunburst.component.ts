@@ -29,7 +29,7 @@ export class SunburstComponent implements OnInit {
     const chartNativeElement= this.chartContainer.nativeElement;
 
     const width= 100;
-    const height= 200;
+    const height= 200*0.85;
     const maxRadius= height/2;
 
     // theta scale
@@ -51,12 +51,12 @@ export class SunburstComponent implements OnInit {
 
     // Color scale
     const color= (d) => {
-      return d3.interpolateWarm( (d.x0 + d.x1)/2 );
+      return d3.interpolateCool( (d.x0 + d.x1)/2 );
     };
 
     // opacity scale
     const opacity= (d) => {
-      const opacityScale= d3.scaleLinear().range([1, 0.2]);
+      const opacityScale= d3.scaleLinear().range([0.3, 0.3]);
       return opacityScale( (d.y0 + d.y1)/2 );
     };
 
