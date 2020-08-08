@@ -1,4 +1,4 @@
-import { Education } from './education.model';
+import { Education } from '../data/education.model';
 
 export const EDUCATION: Education[] = [
   new Education(new Date(2019, 0, 1),

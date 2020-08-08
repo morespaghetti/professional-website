@@ -1,4 +1,4 @@
-import { Experience } from './experience.model';
+import { Experience } from '../data/experience.model';
 
 export const VOLUNTEER: Experience [] = [
 

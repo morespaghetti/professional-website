@@ -1,4 +1,4 @@
-import { Affiliations } from './Affiliations.model';
+import { Affiliations } from '../data/Affiliations.model';
 
 export const AFFILIATIONS: Affiliations[] = [
   new Affiliations(new Date(2018, 6, 1),

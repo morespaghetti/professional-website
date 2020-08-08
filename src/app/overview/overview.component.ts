@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Education } from '../data/education.model';
-import { EDUCATION } from '../data/education';
-import { Experience } from '../data/experience.model';
-import { EXPERIENCE } from '../data/experience';
 import { Subsection } from '../section/subsection/subsection.model';
-import { VOLUNTEER } from '../data/volunteer';
-import { Affiliations } from '../data/Affiliations.model';
-import { AFFILIATIONS } from '../data/affiliations';
+import { SunburstData } from '../sunburst/sunburst.model';
+
+import { SkillsService } from '../services/skills.service';
+import { BackgroundService } from '../services/background.service';
 
 @Component({
   selector: 'app-overview',
@@ -15,25 +12,42 @@ import { AFFILIATIONS } from '../data/affiliations';
 })
 export class OverviewComponent implements OnInit {
 
-  readonly education: Education[]= EDUCATION;
-  educationSubsections: Subsection[];
+  public affiliationsSubsection: Subsection[];
+  public educationSubsection: Subsection[];
+  public experienceSubsection: Subsection[];
+  public volunteerSubsection: Subsection[];
+  public sunburstData: SunburstData[];
 
-  readonly experience: Experience[]= EXPERIENCE;
-  experienceSubsections: Subsection[];
-
-  readonly volunteer: Experience[]= VOLUNTEER;
-  volunteerSubsections: Subsection[];
-
-  readonly affiliations: Affiliations[]= AFFILIATIONS;
-  affiliationsSubsections: Subsection[];
-
-  constructor() { }
+  constructor( private backgroundService: BackgroundService,
+    private skillsService: SkillsService ) { }
 
   ngOnInit() {
-    this.experienceSubsections= this.experience.map(e=>e.toSubsection());
-    this.educationSubsections= this.education.map(e=>e.toSubsection());
-    this.volunteerSubsections= this.volunteer.map(e=>e.toSubsection());
-    this.affiliationsSubsections= this.affiliations.map(e=>e.toSubsection());
+
+    // Affiliations data
+    this.backgroundService.affiliationsGet().subscribe(( affiliation )=>{
+      this.affiliationsSubsection= affiliation.map(e=>e.toSubsection());
+    });
+
+    // Education data
+    this.backgroundService.educationGet().subscribe(( education )=>{
+      this.educationSubsection= education.map(e=>e.toSubsection());
+    });
+
+    // Experience data
+    this.backgroundService.experienceGet().subscribe((experience)=>{
+      this.experienceSubsection= experience.map(e=>e.toSubsection())
+    });
+
+    // Volunteer data
+    this.backgroundService.volunteerGet().subscribe((volunteer)=>{
+      this.volunteerSubsection= volunteer.map(e=>e.toSubsection())
+    });
+
+    // Skills data for sunburst
+    this.skillsService.skillsGet().subscribe(( skillData )=>{
+      this.sunburstData= skillData;
+      SunburstData.defaultSizeSet(this.sunburstData);
+    });
   }
 
 }

@@ -1,8 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import * as d3 from 'd3';
 
-import {SkillsData} from './skillsData';
-import { Sunburst } from './sunburst.model';
+import { SunburstData } from './sunburst.model';
 
 @Component({
   selector: 'app-sunburst',
@@ -14,7 +13,7 @@ export class SunburstComponent implements OnInit {
 
   chartNativeElement;
 
-  data: Sunburst[]= SkillsData;
+  @Input() data: SunburstData[];
 
   constructor() {
   }
@@ -184,7 +183,7 @@ export class SunburstComponent implements OnInit {
   }
 
   // Sorts each node in reverse alphabetical order
-  private skillsDataSort(root: Sunburst[]): void {
+  private skillsDataSort(root: SunburstData[]): void {
     root.sort((a, b) => (a.name>b.name) ? -1 : 1);
 
     root.forEach( (e) => {

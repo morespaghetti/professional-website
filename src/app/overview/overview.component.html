@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-xl-12">
           <div class="job">Technologist, Engineer and Researcher</div>
-          <div class="industry">Artificial Intelligence, Cognitive Technology, Space & Defence</div>
+          <div class="industry">Cognitive, Emerging Technology, Space & Defence</div>
         </div>
       </div>
 
@@ -25,16 +25,16 @@
 
       <div class="row contentWrapper">
         <div class="col-xl-12">
-          <app-section title="Education" [subsections]="educationSubsections" [endDateEnable]='false'></app-section>
-          <app-section title="Professional Experience" [subsections]="experienceSubsections"></app-section>
-          <app-section title="Volunteer Experience" [subsections]="volunteerSubsections"></app-section>
-          <app-section title="Additional Affiliations" [subsections]="affiliationsSubsections" [endDateEnable]='false'></app-section>
+          <app-section title="Education" [subsections]="educationSubsection" [endDateEnable]='false'></app-section>
+          <app-section title="Professional Experience" [subsections]="experienceSubsection"></app-section>
+          <app-section title="Volunteer Experience" [subsections]="volunteerSubsection"></app-section>
+          <app-section title="Additional Affiliations" [subsections]="affiliationsSubsection" [endDateEnable]='false'></app-section>
         </div>
       </div>
     </div>
 
     <div class="col-xl-6">
-      <app-sunburst></app-sunburst>
+      <app-sunburst [data]="sunburstData"></app-sunburst>
     </div>
   </div>
   <div class="row pt-5">
