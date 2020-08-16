@@ -1,0 +1,20 @@
+:host {
+    width: 100%;
+}
+
+.contactForm {
+    text-align: center;
+
+    .field {
+        width: 80%;
+        max-width: 400px;
+    }
+
+    .messageText {
+        min-height: 100px;
+    }
+
+    .submitButton {
+
+    }
+}

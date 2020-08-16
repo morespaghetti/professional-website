@@ -1,0 +1,31 @@
+<form class="contactForm" #contactForm="ngForm" [formGroup]="contactFormGroup" (ngSubmit)="onSubmit()">
+
+  <h4>Get in touch</h4>
+  I will email you back as soon as I can
+  <br>
+
+  <mat-form-field class="field" style="padding-top: 20px" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Your name" formControlName="name" required>
+      <mat-error *ngIf="contactFormGroup.controls.name.invalid">{{nameErrorMessageGet()}}</mat-error>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="field" appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="you@example.com" formControlName="email" required>
+      <mat-error *ngIf="contactFormGroup.controls.email.invalid">{{emailErrorMessageGet()}}</mat-error>
+  </mat-form-field>
+  
+  <br>
+
+  <mat-form-field class="field" appearance="fill">
+    <mat-label>Message</mat-label>
+    <textarea matInput formControlName="message" class="messageText" required></textarea>
+  </mat-form-field>
+  
+  <br>
+
+  <button mat-stroked-button class="submitButton" type="submit" [disabled]="!contactFormGroup.valid && submitEnable">Submit</button>
+</form>
